@@ -1,0 +1,189 @@
+// app global css in SCSS form
+
+$gutter: 8px;
+$light: #32f306;
+$med: #ee08cd;
+$low: #3905f3;
+
+:root {
+  --animate-duration: 0.3s;
+}
+
+@keyframes pulse {
+  from {
+    transform: scale3d(1, 1, 1);
+  }
+
+  50% {
+    transform: scale3d(1.05, 1.05, 1.05);
+  }
+
+  to {
+    transform: scale3d(1, 1, 1);
+  }
+}
+
+body.body--dark {
+  background: #1a1a24;
+  font-family: "Azeret Mono", monospace;
+}
+
+.player {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: $gutter * 4;
+  gap: 16px;
+  h1 {
+    font-size: $gutter * 3;
+    line-height: $gutter * 3.5;
+    font-weight: bold;
+    margin: 0px;
+    padding: 0px;
+  }
+  .title {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 24px 0px;
+    gap: 8px;
+
+    text-align: center;
+
+    flex: none;
+    align-self: stretch;
+    flex-grow: 0;
+    p {
+      font-size: 14px;
+      line-height: 16px;
+      color: rgba(255, 255, 255, 0.64);
+    }
+  }
+  .beats {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0px;
+    gap: 16px;
+
+    flex: none;
+    align-self: stretch;
+    flex-grow: 1;
+  }
+  .beat {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 0px;
+    gap: 8px;
+
+    flex: none;
+    align-self: stretch;
+    flex-grow: 1;
+    button {
+      box-sizing: border-box;
+      background: rgba(255, 255, 255, 0.08);
+      border: 3px solid transparent;
+      border-radius: 10px;
+      flex: none;
+      align-self: stretch;
+      flex-grow: 1;
+      transition: 0.1s ease-in-out all;
+      &:hover {
+        cursor: pointer;
+        opacity: 0.75;
+      }
+    }
+    &-high {
+      .active {
+        background: $light;
+        border: 3px solid $light;
+        box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25),
+          0px 0px 32px rgba($light, 0.48);
+        &.current {
+          animation-name: pulse;
+          animation-timing-function: ease-in-out;
+          -webkit-animation-duration: 1s;
+          animation-duration: 1s;
+          -webkit-animation-duration: var(--animate-duration);
+          animation-duration: var(--animate-duration);
+          -webkit-animation-fill-mode: both;
+          animation-fill-mode: both;
+          opacity: 1;
+        }
+      }
+      .current {
+        opacity: 0.75;
+      }
+    }
+    &-med {
+      .active {
+        background: $med;
+        border: 3px solid $med;
+        box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25),
+          0px 0px 32px rgba($med, 0.48);
+        &.current {
+          animation-name: pulse;
+          animation-timing-function: ease-in-out;
+          -webkit-animation-duration: 1s;
+          animation-duration: 1s;
+          -webkit-animation-duration: var(--animate-duration);
+          animation-duration: var(--animate-duration);
+          -webkit-animation-fill-mode: both;
+          animation-fill-mode: both;
+          opacity: 1;
+        }
+      }
+      .current {
+        opacity: 0.75;
+      }
+    }
+    &-low {
+      .active {
+        background: $low;
+        border: 3px solid $low;
+        box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25),
+          0px 0px 32px rgba($low, 0.48);
+        &.current {
+          animation-name: pulse;
+          animation-timing-function: ease-in-out;
+          -webkit-animation-duration: 1s;
+          animation-duration: 1s;
+          -webkit-animation-duration: var(--animate-duration);
+          animation-duration: var(--animate-duration);
+          -webkit-animation-fill-mode: both;
+          animation-fill-mode: both;
+          opacity: 1;
+        }
+      }
+      .current {
+        opacity: 0.75;
+      }
+    }
+  }
+  .bpm {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 0px;
+    gap: 16px;
+
+    flex: none;
+    align-self: stretch;
+    flex-grow: 0;
+  }
+  .action {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 0px;
+    gap: 16px;
+
+    flex: none;
+    align-self: stretch;
+    flex-grow: 0;
+  }
+}
