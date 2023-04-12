@@ -14,8 +14,10 @@
   },
   "dependencies": {
     "@quasar/extras": "^1.0.0",
+    "@supabase/supabase-js": "^2.20.0",
     "animate.css": "^4.1.1",
     "core-js": "^3.6.5",
+    "dotenv": "^16.0.3",
     "quasar": "^2.6.0",
     "tone": "^14.7.77",
     "vue": "^3.0.0",

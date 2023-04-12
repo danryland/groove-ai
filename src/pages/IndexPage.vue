@@ -1,42 +1,42 @@
 <template>
-  <q-page class="player">
+  <q-page class="player" v-if="groove">
     <div class="title">
-      <h1>Pulsating Groove Expedition</h1>
+      <h1>{{ groove.title }}</h1>
       <p>
-        Rhythmic voyage, drums collide, In sync, we sway, on beats we glide.
+        {{ groove.description }}
       </p>
     </div>
 
     <div class="beats">
       <div class="beat beat-high">
         <button
-          v-for="(h, index) in high"
+          v-for="(high, index) in groove.beat_high"
           :key="'high-' + index"
-          :class="{ active: h.active, current: index === currentBeat }"
-          @click="toggleActive(h)"
+          :class="{ active: high.active, current: index === currentBeat }"
+          @click="toggleActive(high)"
         ></button>
       </div>
       <div class="beat beat-med">
         <button
-          v-for="(m, index) in med"
+          v-for="(med, index) in groove.beat_med"
           :key="'med-' + index"
-          :class="{ active: m.active, current: index === currentBeat }"
-          @click="toggleActive(m)"
+          :class="{ active: med.active, current: index === currentBeat }"
+          @click="toggleActive(med)"
         ></button>
       </div>
       <div class="beat beat-low">
         <button
-          v-for="(l, index) in low"
+          v-for="(low, index) in groove.beat_low"
           :key="'low-' + index"
-          :class="{ active: l.active, current: index === currentBeat }"
-          @click="toggleActive(l)"
+          :class="{ active: low.active, current: index === currentBeat }"
+          @click="toggleActive(low)"
         ></button>
       </div>
     </div>
 
     <div class="bpm">
       <q-input
-        v-model.number="bpm"
+        v-model.number="groove.bpm"
         @change="updateBPM"
         min="20"
         max="300"
@@ -65,60 +65,41 @@
 </template>
 
 <script>
+import supabase from "../supabase";
 import * as Tone from "tone";
 
 export default {
   name: "IndexPage",
   data() {
     return {
-      bpm: 120,
+      groove: null,
       currentBeat: -1,
       playbackState: "stopped",
-      high: [
-        { active: true },
-        { active: false },
-        { active: true },
-        { active: false },
-        { active: true },
-        { active: false },
-        { active: true },
-        { active: false },
-      ],
-      med: [
-        { active: false },
-        { active: false },
-        { active: false },
-        { active: true },
-        { active: false },
-        { active: false },
-        { active: false },
-        { active: true },
-      ],
-      low: [
-        { active: true },
-        { active: false },
-        { active: false },
-        { active: false },
-        { active: true },
-        { active: false },
-        { active: false },
-        { active: false },
-      ],
     };
   },
-  mounted() {
+  async mounted() {
+    await this.getRandomGroove();
     this.initToneSequence();
   },
   computed: {
     hasActiveBeat() {
       return (
-        this.high.some((beat) => beat.active) ||
-        this.med.some((beat) => beat.active) ||
-        this.low.some((beat) => beat.active)
+        this.groove.beat_high.some((beat) => beat.active) ||
+        this.groove.beat_med.some((beat) => beat.active) ||
+        this.groove.beat_low.some((beat) => beat.active)
       );
     },
   },
   methods: {
+    async getRandomGroove() {
+      const { data, error } = await supabase.rpc("get_random_groove");
+
+      if (error) {
+        console.error("Error fetching random groove:", error);
+      } else {
+        this.groove = data[0];
+      }
+    },
     toggleActive(beat) {
       beat.active = !beat.active;
     },
@@ -127,13 +108,31 @@ export default {
     },
     initToneSequence() {
       const highSynth = new Tone.Sampler({
-        urls: { C4: "/assets/audio/funk/high/1.wav" },
+        urls: {
+          C4:
+            process.env.SUPABASE_URL +
+            "/storage/v1/object/public/audio/" +
+            this.groove.genre +
+            "/high.wav",
+        },
       }).toDestination();
       const medSynth = new Tone.Sampler({
-        urls: { C4: "/assets/audio/funk/med/1.wav" },
+        urls: {
+          C4:
+            process.env.SUPABASE_URL +
+            "/storage/v1/object/public/audio/" +
+            this.groove.genre +
+            "/med.wav",
+        },
       }).toDestination();
       const lowSynth = new Tone.Sampler({
-        urls: { C4: "/assets/audio/funk/low/1.wav" },
+        urls: {
+          C4:
+            process.env.SUPABASE_URL +
+            "/storage/v1/object/public/audio/" +
+            this.groove.genre +
+            "/low.wav",
+        },
       }).toDestination();
 
       const sequence = new Tone.Sequence(
@@ -141,21 +140,21 @@ export default {
           Tone.Draw.schedule(() => {
             this.updateCurrentBeat(beatIndex);
           }, time);
-          if (this.high[beatIndex].active) {
+          if (this.groove.beat_high[beatIndex].active) {
             highSynth.triggerAttackRelease("C4", "8n", time);
           }
-          if (this.med[beatIndex].active) {
+          if (this.groove.beat_med[beatIndex].active) {
             medSynth.triggerAttackRelease("C4", "8n", time);
           }
-          if (this.low[beatIndex].active) {
+          if (this.groove.beat_low[beatIndex].active) {
             lowSynth.triggerAttackRelease("C4", "8n", time);
           }
         },
-        Array.from({ length: this.high.length }, (_, i) => i),
+        Array.from({ length: this.groove.beat_high.length }, (_, i) => i),
         "8n"
       );
 
-      Tone.Transport.bpm.value = this.bpm / 2;
+      Tone.Transport.bpm.value = this.groove.bpm / 2;
 
       sequence.start();
     },
@@ -172,7 +171,7 @@ export default {
       }
     },
     updateBPM() {
-      Tone.Transport.bpm.value = this.bpm / 2;
+      Tone.Transport.bpm.value = this.groove.bpm / 2;
     },
   },
 };
