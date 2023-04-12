@@ -41,6 +41,13 @@
     </div>
 
     <div class="bpm">
+      <q-btn
+        icon="fa-solid fa-minus"
+        round
+        flat
+        :disable="groove.bpm <= 20"
+        @click="down(groove.bpm)"
+      />
       <q-input
         v-model.number="groove.bpm"
         @change="updateBPM"
@@ -49,6 +56,13 @@
         step="2"
         type="number"
         borderless
+      />
+      <q-btn
+        icon="fa-solid fa-plus"
+        round
+        flat
+        :disable="groove.bpm >= 300"
+        @click="up(groove.bpm)"
       />
     </div>
     <div class="action">
@@ -99,6 +113,14 @@ export default {
     },
   },
   methods: {
+    down(bpm) {
+      this.groove.bpm = bpm - 10;
+      Tone.Transport.bpm.value = this.groove.bpm / 2;
+    },
+    up(bpm) {
+      this.groove.bpm = bpm + 10;
+      Tone.Transport.bpm.value = this.groove.bpm / 2;
+    },
     async getRandomGroove() {
       const { data, error } = await supabase.rpc("get_random_groove");
 
