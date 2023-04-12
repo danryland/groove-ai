@@ -1,5 +1,11 @@
 <template>
-  <q-page class="player" v-if="groove">
+  <q-dialog v-model="loading" persistent full-width full-height>
+    <div class="flex flex-center column items-center justify-center">
+      <q-icon name="fa-sharp fa-solid fa-spinner fa-spin" size="32px" />
+      <div class="text-h6 q-mt-md">Loading groove...</div>
+    </div>
+  </q-dialog>
+  <q-page class="player" v-if="!loading && groove">
     <div class="title">
       <h1>{{ groove.title }}</h1>
       <p>
@@ -42,7 +48,7 @@
         max="300"
         step="2"
         type="number"
-        filled
+        borderless
       />
     </div>
     <div class="action">
@@ -70,8 +76,10 @@ import * as Tone from "tone";
 
 export default {
   name: "IndexPage",
+  emits: ["loading"],
   data() {
     return {
+      loading: true,
       groove: null,
       currentBeat: -1,
       playbackState: "stopped",
@@ -98,6 +106,10 @@ export default {
         console.error("Error fetching random groove:", error);
       } else {
         this.groove = data[0];
+        setTimeout(() => {
+          this.loading = false;
+          this.$emit("loading", false);
+        }, 600);
       }
     },
     toggleActive(beat) {

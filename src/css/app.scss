@@ -23,6 +23,19 @@ body.body--dark {
   font-family: "Azeret Mono", monospace;
 }
 
+.q-dialog {
+  .q-icon {
+    background: linear-gradient(302.62deg, #02e3f5 -0.44%, #ee08cd 99.56%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-fill-color: transparent;
+  }
+  &__backdrop {
+    background-color: $dark;
+  }
+}
+
 .player {
   display: flex;
   flex-direction: column;
@@ -41,7 +54,7 @@ body.body--dark {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 24px 0px;
+    padding: 0px 0px 24px 0px;
     gap: 8px;
 
     text-align: center;
@@ -53,6 +66,7 @@ body.body--dark {
       font-size: 14px;
       line-height: 16px;
       color: rgba(255, 255, 255, 0.64);
+      margin-bottom: 0px;
     }
   }
   .beats {
@@ -164,6 +178,13 @@ body.body--dark {
     align-items: center;
     padding: 0px;
     gap: 16px;
+
+    input {
+      font-weight: 500;
+      font-size: 24px;
+      line-height: 28px;
+      text-align: center;
+    }
 
     flex: none;
     align-self: stretch;

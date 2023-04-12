@@ -1,9 +1,9 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header>
+    <q-header v-if="!loading">
       <q-toolbar>
         <q-btn
-          @click="alert('TODO')"
+          @click="reload()"
           flat
           round
           size="19px"
@@ -25,7 +25,7 @@
     </q-header>
 
     <q-page-container>
-      <router-view />
+      <router-view @loading="handleUpdate" />
     </q-page-container>
   </q-layout>
 </template>
@@ -33,9 +33,20 @@
 <script>
 export default {
   name: "MainLayout",
+  data() {
+    return {
+      loading: true,
+    };
+  },
   methods: {
     alert(text) {
       alert(text);
+    },
+    reload() {
+      window.location.reload();
+    },
+    handleUpdate(newValue) {
+      this.loading = newValue;
     },
   },
 };
@@ -46,7 +57,8 @@ export default {
   background: $dark;
   padding: $gutter * 4 $gutter * 4 $gutter * 2 $gutter * 4;
   .q-toolbar {
-    justify-content: space-evenly;
+    justify-content: space-between;
+    padding: 0px;
   }
 }
 .fa-waveform {
