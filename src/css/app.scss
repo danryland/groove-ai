@@ -1,11 +1,5 @@
 // app global css in SCSS form
 
-$gutter: 8px;
-$light: #32f306;
-$med: #ee08cd;
-$low: #3905f3;
-$dark: #1a1a24;
-
 :root {
   --animate-duration: 0.3s;
 }
@@ -33,7 +27,7 @@ body.body--dark {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding: $gutter * 4;
+  padding: 0px $gutter * 4 $gutter * 2 $gutter * 4;
   gap: 16px;
   h1 {
     font-size: $gutter * 3;
