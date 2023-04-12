@@ -40,15 +40,26 @@
         @change="updateBPM"
         min="20"
         max="300"
-        step="10"
+        step="2"
         type="number"
         filled
       />
     </div>
     <div class="action">
-      <button @click="playSequence" :disabled="!hasActiveBeat">
-        {{ playbackState === "playing" ? "Pause" : "Play" }}
-      </button>
+      <q-btn @click="playSequence" :disabled="!hasActiveBeat" round size="lg">
+        <q-icon
+          size="1.5em"
+          v-if="playbackState === 'playing'"
+          name="fa-sharp fa-solid
+        fa-pause"
+        />
+        <q-icon
+          v-else
+          size="1.5em"
+          name="fa-sharp fa-solid
+        fa-play"
+        />
+      </q-btn>
     </div>
   </q-page>
 </template>
@@ -60,86 +71,38 @@ export default {
   name: "IndexPage",
   data() {
     return {
-      bpm: 60,
+      bpm: 120,
       currentBeat: -1,
       playbackState: "stopped",
       high: [
-        {
-          active: false,
-        },
-        {
-          active: false,
-        },
-        {
-          active: false,
-        },
-        {
-          active: false,
-        },
-        {
-          active: false,
-        },
-        {
-          active: false,
-        },
-        {
-          active: false,
-        },
-        {
-          active: false,
-        },
+        { active: true },
+        { active: false },
+        { active: true },
+        { active: false },
+        { active: true },
+        { active: false },
+        { active: true },
+        { active: false },
       ],
       med: [
-        {
-          active: false,
-        },
-        {
-          active: false,
-        },
-        {
-          active: false,
-        },
-        {
-          active: false,
-        },
-        {
-          active: false,
-        },
-        {
-          active: false,
-        },
-        {
-          active: false,
-        },
-        {
-          active: false,
-        },
+        { active: false },
+        { active: false },
+        { active: false },
+        { active: true },
+        { active: false },
+        { active: false },
+        { active: false },
+        { active: true },
       ],
       low: [
-        {
-          active: false,
-        },
-        {
-          active: false,
-        },
-        {
-          active: false,
-        },
-        {
-          active: false,
-        },
-        {
-          active: false,
-        },
-        {
-          active: false,
-        },
-        {
-          active: false,
-        },
-        {
-          active: false,
-        },
+        { active: true },
+        { active: false },
+        { active: false },
+        { active: false },
+        { active: true },
+        { active: false },
+        { active: false },
+        { active: false },
       ],
     };
   },
@@ -192,7 +155,7 @@ export default {
         "8n"
       );
 
-      Tone.Transport.bpm.value = this.bpm;
+      Tone.Transport.bpm.value = this.bpm / 2;
 
       sequence.start();
     },
@@ -209,7 +172,7 @@ export default {
       }
     },
     updateBPM() {
-      Tone.Transport.bpm.value = this.bpm;
+      Tone.Transport.bpm.value = this.bpm / 2;
     },
   },
 };

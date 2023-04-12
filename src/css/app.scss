@@ -4,6 +4,7 @@ $gutter: 8px;
 $light: #32f306;
 $med: #ee08cd;
 $low: #3905f3;
+$dark: #1a1a24;
 
 :root {
   --animate-duration: 0.3s;
@@ -24,7 +25,7 @@ $low: #3905f3;
 }
 
 body.body--dark {
-  background: #1a1a24;
+  background: $dark;
   font-family: "Azeret Mono", monospace;
 }
 
@@ -185,5 +186,13 @@ body.body--dark {
     flex: none;
     align-self: stretch;
     flex-grow: 0;
+    .q-btn {
+      background: linear-gradient(302.62deg, #02e3f5 -0.44%, #ee08cd 99.56%);
+      color: $dark;
+      .q-icon.fa-play {
+        position: relative;
+        left: 3px;
+      }
+    }
   }
 }
