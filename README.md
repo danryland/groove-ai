@@ -4,13 +4,15 @@
 
 [WATCH: Watch a demo](https://www.loom.com/share/0c8e99b9e17e40efa65e114a4845ae8a)
 
+![Groove AI - AI Generated Drum Patterns](./src/assets/img/groove-ai-cover.jpeg)
+
 Hey, I'm Dan Ryland ([@RealDanRyland](https://twitter.com/RealDanRyland)) and I'm a drummer.
 
 As a musician, I'm super interested in the developments around AI generated music and text-to-music AI models.
 
 I've never submitted anything to a hackathon, so as this is my first ever, open source hackathon entry, I decided to make an AI generated drum pattern app.
 
-These drum patterns and named and generated (genre, pattern and BPM) by Open AI's GPT 3.5 Turbo.
+These drum patterns are named and generated (title, two-line rap, pattern and BPM for a randomly selected genre) by Open AI's GPT 3.5 Turbo.
 
 I then store these generated patterns in Supabase. Every time you load the site, it will randomly select one groove from the database. You can modify this pattern by toggling each beat. You can also generate a new drum pattern.
 
