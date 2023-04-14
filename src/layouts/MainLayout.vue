@@ -116,7 +116,10 @@ export default {
         });
     },
     async saveGroove(groove) {
-      const { data, error } = await supabase.from("grooves").insert([groove]);
+      const { data, error } = await supabase
+        .from("grooves")
+        .insert([groove])
+        .select();
 
       if (error) {
         console.error("Error saving groove:", error);
