@@ -99,6 +99,11 @@ export default {
       playbackState: "stopped",
     };
   },
+  mounted() {
+    if (this.groove) {
+      this.initToneSequence(this.groove);
+    }
+  },
   computed: {
     hasActiveBeat() {
       return (
@@ -207,7 +212,6 @@ export default {
           this.initToneSequence(newGroove);
         }
       },
-      deep: true,
       immediate: true,
     },
   },
