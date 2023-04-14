@@ -139,7 +139,7 @@ export default {
             process.env.SUPABASE_URL +
             "/storage/v1/object/public/audio/" +
             groove.genre +
-            "/med.wav",
+            "/mid.wav",
         },
       }).toDestination();
       const lowSynth = new Tone.Sampler({
