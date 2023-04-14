@@ -1,10 +1,4 @@
 <template>
-  <q-dialog v-model="loading" persistent full-width full-height>
-    <div class="flex flex-center column items-center justify-center">
-      <q-icon name="fa-sharp fa-solid fa-spinner fa-spin" size="32px" />
-      <div class="text-h6 q-mt-md">Loading groove...</div>
-    </div>
-  </q-dialog>
   <q-page class="player" v-if="!loading && groove">
     <div class="title">
       <h1>{{ groove.title }}</h1>
@@ -12,6 +6,8 @@
         {{ groove.description }}
       </p>
     </div>
+
+    <pre>{{ JSON.stringify(groove, null, 2) }}</pre>
 
     <div class="beats">
       <div class="beat beat-high">
@@ -22,12 +18,12 @@
           @click="toggleActive(high)"
         ></button>
       </div>
-      <div class="beat beat-med">
+      <div class="beat beat-mid">
         <button
-          v-for="(med, index) in groove.beat_med"
-          :key="'med-' + index"
-          :class="{ active: med.active, current: index === currentBeat }"
-          @click="toggleActive(med)"
+          v-for="(mid, index) in groove.beat_mid"
+          :key="'mid-' + index"
+          :class="{ active: mid.active, current: index === currentBeat }"
+          @click="toggleActive(mid)"
         ></button>
       </div>
       <div class="beat beat-low">
@@ -45,11 +41,11 @@
         icon="fa-solid fa-minus"
         round
         flat
-        :disable="groove.bpm <= 20"
-        @click="down(groove.bpm)"
+        :disable="bpm <= 20"
+        @click="down(bpm)"
       />
       <q-input
-        v-model.number="groove.bpm"
+        v-model.number="bpm"
         @change="updateBPM"
         min="20"
         max="300"
@@ -61,8 +57,8 @@
         icon="fa-solid fa-plus"
         round
         flat
-        :disable="groove.bpm >= 300"
-        @click="up(groove.bpm)"
+        :disable="bpm >= 300"
+        @click="up(bpm)"
       />
     </div>
     <div class="action">
@@ -85,54 +81,43 @@
 </template>
 
 <script>
-import supabase from "../supabase";
 import * as Tone from "tone";
 
 export default {
   name: "IndexPage",
-  emits: ["loading"],
+  props: {
+    groove: {
+      type: Object,
+      default: () => ({}),
+    },
+    loading: {
+      type: Boolean,
+    },
+  },
   data() {
     return {
-      loading: true,
-      groove: null,
+      bpm: 100,
       currentBeat: -1,
       playbackState: "stopped",
     };
-  },
-  async mounted() {
-    await this.getRandomGroove();
-    this.initToneSequence();
   },
   computed: {
     hasActiveBeat() {
       return (
         this.groove.beat_high.some((beat) => beat.active) ||
-        this.groove.beat_med.some((beat) => beat.active) ||
+        this.groove.beat_mid.some((beat) => beat.active) ||
         this.groove.beat_low.some((beat) => beat.active)
       );
     },
   },
   methods: {
     down(bpm) {
-      this.groove.bpm = bpm - 10;
-      Tone.Transport.bpm.value = this.groove.bpm / 2;
+      this.bpm = bpm - 10;
+      Tone.Transport.bpm.value = this.bpm / 2;
     },
     up(bpm) {
-      this.groove.bpm = bpm + 10;
-      Tone.Transport.bpm.value = this.groove.bpm / 2;
-    },
-    async getRandomGroove() {
-      const { data, error } = await supabase.rpc("get_random_groove");
-
-      if (error) {
-        console.error("Error fetching random groove:", error);
-      } else {
-        this.groove = data[0];
-        setTimeout(() => {
-          this.loading = false;
-          this.$emit("loading", false);
-        }, 600);
-      }
+      this.bpm = bpm + 10;
+      Tone.Transport.bpm.value = this.bpm / 2;
     },
     toggleActive(beat) {
       beat.active = !beat.active;
@@ -140,13 +125,13 @@ export default {
     updateCurrentBeat(beatIndex) {
       this.currentBeat = beatIndex;
     },
-    initToneSequence() {
+    initToneSequence(groove) {
       const highSynth = new Tone.Sampler({
         urls: {
           C4:
             process.env.SUPABASE_URL +
             "/storage/v1/object/public/audio/" +
-            this.groove.genre +
+            groove.genre +
             "/high.wav",
         },
       }).toDestination();
@@ -155,7 +140,7 @@ export default {
           C4:
             process.env.SUPABASE_URL +
             "/storage/v1/object/public/audio/" +
-            this.groove.genre +
+            groove.genre +
             "/med.wav",
         },
       }).toDestination();
@@ -164,7 +149,7 @@ export default {
           C4:
             process.env.SUPABASE_URL +
             "/storage/v1/object/public/audio/" +
-            this.groove.genre +
+            groove.genre +
             "/low.wav",
         },
       }).toDestination();
@@ -174,21 +159,21 @@ export default {
           Tone.Draw.schedule(() => {
             this.updateCurrentBeat(beatIndex);
           }, time);
-          if (this.groove.beat_high[beatIndex].active) {
+          if (groove.beat_high[beatIndex].active) {
             highSynth.triggerAttackRelease("C4", "8n", time);
           }
-          if (this.groove.beat_med[beatIndex].active) {
+          if (groove.beat_mid[beatIndex].active) {
             medSynth.triggerAttackRelease("C4", "8n", time);
           }
-          if (this.groove.beat_low[beatIndex].active) {
+          if (groove.beat_low[beatIndex].active) {
             lowSynth.triggerAttackRelease("C4", "8n", time);
           }
         },
-        Array.from({ length: this.groove.beat_high.length }, (_, i) => i),
+        Array.from({ length: groove.beat_high.length }, (_, i) => i),
         "8n"
       );
 
-      Tone.Transport.bpm.value = this.groove.bpm / 2;
+      Tone.Transport.bpm.value = this.bpm / 2;
 
       sequence.start();
     },
@@ -205,7 +190,27 @@ export default {
       }
     },
     updateBPM() {
-      Tone.Transport.bpm.value = this.groove.bpm / 2;
+      Tone.Transport.bpm.value = this.bpm / 2;
+    },
+    clearTone() {
+      Tone.Transport.stop();
+      Tone.Transport.cancel();
+    },
+  },
+  watch: {
+    groove: {
+      handler(newGroove, oldGroove) {
+        if (oldGroove !== null) {
+          this.clearTone();
+          this.playbackState = "stopped";
+        }
+        if (newGroove) {
+          this.bpm = newGroove.bpm;
+          this.initToneSequence(newGroove);
+        }
+      },
+      deep: true,
+      immediate: true,
     },
   },
 };

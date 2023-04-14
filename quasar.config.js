@@ -50,6 +50,7 @@ module.exports = configure(function (ctx) {
       env: {
         SUPABASE_URL: process.env.SUPABASE_URL,
         SUPABASE_KEY: process.env.SUPABASE_KEY,
+        SUPABASE_FUNCTION: process.env.SUPABASE_FUNCTION,
       },
 
       // transpile: false,
@@ -105,7 +106,7 @@ module.exports = configure(function (ctx) {
       // directives: [],
 
       // Quasar plugins
-      plugins: [],
+      plugins: ["Notify"],
     },
 
     // animations: 'all', // --- includes all animations
