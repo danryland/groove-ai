@@ -7,8 +7,6 @@
       </p>
     </div>
 
-    <pre>{{ JSON.stringify(groove, null, 2) }}</pre>
-
     <div class="beats">
       <div class="beat beat-high">
         <button
