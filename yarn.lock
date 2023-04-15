@@ -4271,6 +4271,13 @@ micromatch@^4.0.0, micromatch@^4.0.2, micromatch@^4.0.4, micromatch@^4.0.5:
     braces "^3.0.2"
     picomatch "^2.3.1"
 
+midi-writer-js@^2.1.4:
+  version "2.1.4"
+  resolved "https://registry.yarnpkg.com/midi-writer-js/-/midi-writer-js-2.1.4.tgz#01b03a167c9321898eddcf6db45ca948daa62b8e"
+  integrity sha512-gpc7TBg4a6XaKfdWSEbFof3eKLBiBHD4dGHF6sh/LW+5eTwTRgcu5+03eeDHa8ZSti6e5trAhT3KYbdmJ7ddJg==
+  dependencies:
+    tonal-midi "^0.69.7"
+
 mime-db@1.52.0, "mime-db@>= 1.43.0 < 2":
   version "1.52.0"
   resolved "https://registry.npmjs.org/mime-db/-/mime-db-1.52.0.tgz"
@@ -4445,6 +4452,11 @@ normalize-url@^6.0.1:
   version "6.1.0"
   resolved "https://registry.npmjs.org/normalize-url/-/normalize-url-6.1.0.tgz"
   integrity sha512-DlL+XwOy3NxAQ8xuC0okPgK46iuVNAK01YN7RueYBqqFeGsBjV9XmCAzAdgt+667bCl5kPh9EqKKDwnaPG1I7A==
+
+note-parser@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/note-parser/-/note-parser-2.0.1.tgz#2438fd57a46894b402b3a2071798660129c8fbc1"
+  integrity sha512-w9o6Fv46y3NsFxeezTZSmftBtUM/ypme6iZWVrTJvvsD5RN+w0XNDePWtfreNrZFL3jSjBFhadPoXb+pJO4UdA==
 
 npm-run-path@^4.0.1:
   version "4.0.1"
@@ -5749,6 +5761,13 @@ toidentifier@1.0.1:
   version "1.0.1"
   resolved "https://registry.npmjs.org/toidentifier/-/toidentifier-1.0.1.tgz"
   integrity sha512-o5sSPKEkg/DIQNmH43V0/uerLrpzVedkUh8tGNvaeXpfpuwjKenlSox/2O/BTlZUtEe+JG7s5YhEz608PlAHRA==
+
+tonal-midi@^0.69.7:
+  version "0.69.7"
+  resolved "https://registry.yarnpkg.com/tonal-midi/-/tonal-midi-0.69.7.tgz#e754ec93f3dbdb28a6d39d42457c33ad245ffa47"
+  integrity sha512-AY3YIuIm54HqMxhQgYmKXjjoCN7f6Y4GsF975Ao2aM8LcvcONk8uocN4T/PQI9K6i8yTfkK8aNYNQJjU59Z7ug==
+  dependencies:
+    note-parser "^2.0.1"
 
 tone@^14.7.77:
   version "14.7.77"

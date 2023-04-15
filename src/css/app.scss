@@ -197,13 +197,29 @@ body.body--dark {
     align-items: center;
     padding: 0px;
     gap: 16px;
-
     flex: none;
     align-self: stretch;
     flex-grow: 0;
+    .box {
+      display: flex;
+      align-items: center;
+      text-align: center;
+      justify-content: center;
+    }
+    .box-1,
+    .box-3 {
+      flex-grow: 1;
+      flex-basis: 0;
+    }
+    .box-2 {
+      flex-grow: 0;
+    }
     .q-btn {
       background: linear-gradient(302.62deg, #02e3f5 -0.44%, #ee08cd 99.56%);
       color: $dark;
+      &--flat {
+        background: transparent;
+      }
       .q-icon.fa-play {
         position: relative;
         left: 3px;

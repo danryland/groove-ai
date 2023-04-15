@@ -60,26 +60,45 @@
       />
     </div>
     <div class="action">
-      <q-btn @click="playSequence" :disabled="!hasActiveBeat" round size="lg">
-        <q-icon
-          size="1.5em"
-          v-if="playbackState === 'playing'"
-          name="fa-sharp fa-solid
+      <div class="box box-1">&nbsp;</div>
+      <div class="box box-2">
+        <q-btn @click="playSequence" :disabled="!hasActiveBeat" round size="lg">
+          <q-icon
+            size="1.5em"
+            v-if="playbackState === 'playing'"
+            name="fa-sharp fa-solid
         fa-pause"
-        />
-        <q-icon
-          v-else
-          size="1.5em"
-          name="fa-sharp fa-solid
+          />
+          <q-icon
+            v-else
+            size="1.5em"
+            name="fa-sharp fa-solid
         fa-play"
-        />
-      </q-btn>
+          />
+        </q-btn>
+      </div>
+      <div class="box box-3">
+        <q-btn
+          @click="downloadMIDI"
+          rounded
+          class="q-px-md"
+          color="white"
+          outline
+          ><q-icon
+            size="1.2em"
+            name="fa-sharp fa-light fa-arrow-down"
+            class="q-mr-sm"
+          />
+          <span>MIDI</span></q-btn
+        >
+      </div>
     </div>
   </q-page>
 </template>
 
 <script>
 import * as Tone from "tone";
+import MidiWriter from "midi-writer-js";
 
 export default {
   name: "IndexPage",
@@ -131,7 +150,7 @@ export default {
     initToneSequence(groove) {
       const highSynth = new Tone.Sampler({
         urls: {
-          C4:
+          "A#1":
             process.env.SUPABASE_URL +
             "/storage/v1/object/public/audio/" +
             groove.genre +
@@ -140,7 +159,7 @@ export default {
       }).toDestination();
       const medSynth = new Tone.Sampler({
         urls: {
-          C4:
+          D2:
             process.env.SUPABASE_URL +
             "/storage/v1/object/public/audio/" +
             groove.genre +
@@ -149,7 +168,7 @@ export default {
       }).toDestination();
       const lowSynth = new Tone.Sampler({
         urls: {
-          C4:
+          B1:
             process.env.SUPABASE_URL +
             "/storage/v1/object/public/audio/" +
             groove.genre +
@@ -163,13 +182,13 @@ export default {
             this.updateCurrentBeat(beatIndex);
           }, time);
           if (groove.beat_high[beatIndex].active) {
-            highSynth.triggerAttackRelease("C4", "8n", time);
+            highSynth.triggerAttackRelease("A#1", "8n", time);
           }
           if (groove.beat_mid[beatIndex].active) {
-            medSynth.triggerAttackRelease("C4", "8n", time);
+            medSynth.triggerAttackRelease("D2", "8n", time);
           }
           if (groove.beat_low[beatIndex].active) {
-            lowSynth.triggerAttackRelease("C4", "8n", time);
+            lowSynth.triggerAttackRelease("B1", "8n", time);
           }
         },
         Array.from({ length: groove.beat_high.length }, (_, i) => i),
@@ -198,6 +217,67 @@ export default {
     clearTone() {
       Tone.Transport.stop();
       Tone.Transport.cancel();
+    },
+    downloadMIDI() {
+      const track = new MidiWriter.Track();
+
+      const drumKitProgramChange = new MidiWriter.ProgramChangeEvent({
+        channel: 9,
+        instrument: 0,
+      });
+      track.addEvent(drumKitProgramChange);
+
+      track.setTempo(this.groove.bpm);
+
+      const highNote = 42;
+      const midNote = 38;
+      const lowNote = 36;
+
+      this.groove.beat_high.forEach((beat, beatIndex) => {
+        if (beat.active) {
+          track.addEvent(
+            new MidiWriter.NoteEvent({
+              pitch: [highNote],
+              duration: "8",
+              startTick: beatIndex * 128,
+              channel: 9,
+            })
+          );
+        }
+
+        if (this.groove.beat_mid[beatIndex].active) {
+          track.addEvent(
+            new MidiWriter.NoteEvent({
+              pitch: [midNote],
+              duration: "8",
+              startTick: beatIndex * 128,
+              channel: 9,
+            })
+          );
+        }
+
+        if (this.groove.beat_low[beatIndex].active) {
+          track.addEvent(
+            new MidiWriter.NoteEvent({
+              pitch: [lowNote],
+              duration: "8",
+              startTick: beatIndex * 128,
+              channel: 9,
+            })
+          );
+        }
+      });
+
+      const write = new MidiWriter.Writer([track]);
+
+      const midiDataURL = write.dataUri();
+
+      const link = document.createElement("a");
+      link.href = midiDataURL;
+      link.download = this.groove.title + " - Groove AI.mid";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     },
   },
   watch: {
