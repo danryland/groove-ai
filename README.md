@@ -16,6 +16,8 @@ These drum patterns are named and generated (title, two-line rap, pattern and BP
 
 I then store these generated patterns in Supabase. Every time you load the site, it will randomly select one groove from the database. You can modify this pattern by toggling each beat. You can also generate a new drum pattern.
 
+**NEW** - You can now download your drum patterns as MIDI. Import this MIDI file into your music software.
+
 Enjoy!
 
 ## Supabase features
